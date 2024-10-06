@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Store.Repository
 {
-    internal class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly StoreDbContext _context;
         private  Hashtable _repositories;
