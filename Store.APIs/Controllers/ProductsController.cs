@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.Core.Services.Contract;
+using Store.Core.Specifications.Products;
 
 namespace Store.APIs.Controllers
 {
@@ -15,9 +16,10 @@ namespace Store.APIs.Controllers
             _productService = productService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        //sort name ,price asc,price des
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductSpecParams productSpec)
         {
-            var result = await _productService.GetAllProductsAsync();
+            var result = await _productService.GetAllProductsAsync(productSpec);
             return Ok(result);
         }
         [HttpGet("brands")]
