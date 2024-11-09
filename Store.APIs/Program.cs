@@ -1,5 +1,8 @@
 
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Store.APIs.Errors;
 using Store.Core;
 using Store.Core.Mapping.Products;
 using Store.Core.Services.Contract;
@@ -26,10 +29,25 @@ namespace Store.APIs
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            //services
             builder.Services.AddScoped<IProductService,ProductService>();
             builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
             builder.Services.AddAutoMapper(M => M.AddProfile(new ProductProfile(builder.Configuration)));
-
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                   var error=  actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                    .SelectMany(P => P.Value.Errors)
+                    .Select(E => E.ErrorMessage)
+                    .ToArray();
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = error
+                    };
+                    return new BadRequestObjectResult(response);
+                };
+            });
             var app = builder.Build();
 
             using var Scope=app.Services.CreateScope();

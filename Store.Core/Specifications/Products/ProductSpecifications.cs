@@ -18,7 +18,7 @@ namespace Store.Core.Specifications.Products
         //100
         public ProductSpecifications(ProductSpecParams productSpec) : base(
 
-            p => ( !productSpec.BrandId.HasValue || productSpec.BrandId == p.BrandId) && (!productSpec.TypeId.HasValue || productSpec.TypeId == p.TypeId))
+            p => ( !productSpec.BrandId.HasValue || productSpec.BrandId == p.BrandId) && (!productSpec.TypeId.HasValue || productSpec.TypeId == p.TypeId) && (string.IsNullOrEmpty(productSpec.Search) ||  p.Name.ToLower().Contains(productSpec.Search)))
         {
             //name price asc or pricedesc
             if (!string.IsNullOrEmpty(productSpec.Sort))

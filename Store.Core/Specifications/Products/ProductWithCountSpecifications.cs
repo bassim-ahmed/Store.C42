@@ -11,7 +11,7 @@ namespace Store.Core.Specifications.Products
     {
         public ProductWithCountSpecifications(ProductSpecParams productSpec) : base(
 
-          p => (!productSpec.BrandId.HasValue || productSpec.BrandId == p.BrandId) && (!productSpec.TypeId.HasValue || productSpec.TypeId == p.TypeId))
+          p => (!productSpec.BrandId.HasValue || productSpec.BrandId == p.BrandId) && (!productSpec.TypeId.HasValue || productSpec.TypeId == p.TypeId) && (string.IsNullOrEmpty(productSpec.Search) || p.Name.ToLower().Contains(productSpec.Search)))
         {
             //name price asc or pricedesc
            
